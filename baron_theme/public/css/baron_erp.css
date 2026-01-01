@@ -536,3 +536,12 @@ button.btn.btn-secondary.action-btn {
 .section-head {
     padding-left: 1rem !important;
 }
+
+/* إخفاء قائمة Help من الـ navbar */
+.nav-item.dropdown-help,
+li.nav-item.dropdown-help,
+.dropdown-help,
+button[aria-controls="toolbar-help"],
+button[aria-label*="Help Dropdown"] {
+    display: none !important;
+}
