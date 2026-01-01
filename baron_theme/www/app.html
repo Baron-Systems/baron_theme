@@ -90,9 +90,12 @@
 
 
     }
-	.layout-side-section {
-    display: none;
-}
+	/* إخفاء القائمة الجانبية فقط على الشاشات الكبيرة (ليس الموبايل) */
+	@media (min-width: 992px) {
+		.layout-side-section {
+			display: none;
+		}
+	}
 </style>
 
 		{% if lang == "eo" %}
