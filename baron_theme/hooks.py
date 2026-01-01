@@ -1,8 +1,8 @@
 app_name = "baron_theme"
 app_title = "Baron Theme"
-app_publisher = "Muqeet Mughal"
+app_publisher = "albaron systems"
 app_description = "Frappe Theme"
-app_email = "muqeetmughal786@gmail.com"
+app_email = "albaronsystems@gmail.com"
 app_license = "mit"
 
 # Apps
