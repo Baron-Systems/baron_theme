@@ -1,7 +1,6 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
-
 from urllib.parse import urljoin, urlparse
 
 import frappe
@@ -22,6 +21,16 @@ from frappe.website.utils import get_home_page
 no_cache = True
 
 
+# =========================================================
+# ⭐ Centralized App Name (Best Practice)
+# =========================================================
+def get_app_name():
+	return (
+		frappe.get_website_settings("website_title")
+		or _("Al Baron Systems")
+	)
+
+
 def get_context(context):
 	from frappe.integrations.frappe_providers.frappecloud_billing import get_site_login_url
 	from frappe.utils.frappecloud import on_frappecloud
@@ -39,28 +48,25 @@ def get_context(context):
 		if redirect_to != "login":
 			frappe.local.flags.redirect_location = redirect_to
 			raise frappe.Redirect
-		
 
 	theme_settings = frappe.get_single("Theme Settings")
-
 
 	context.no_header = True
 	context.for_test = "login.html"
 	context["title"] = "Login"
-	context["hide_login"] = True  # dont show login link on login page again.
+	context["hide_login"] = True
 	context["provider_logins"] = []
 	context["disable_signup"] = cint(frappe.get_website_settings("disable_signup"))
 	context["show_footer_on_login"] = cint(frappe.get_website_settings("show_footer_on_login"))
 	context["disable_user_pass_login"] = cint(frappe.get_system_settings("disable_user_pass_login"))
 	context["logo"] = get_app_logo()
-	context["app_name"] = (
-		frappe.get_website_settings("app_name") or frappe.get_system_settings("app_name") or _("Frappe")
-	)
+
+	# ✅ App Name (Centralized)
+	context["app_name"] = get_app_name()
 
 	context["login_page_image"] = theme_settings.login_page_image or None
 	context["login_background_image"] = theme_settings.login_background_image or None
-	context['theme_color'] = theme_settings.color or None
-	print("Login Image: ",theme_settings.login_background_image)
+	context["theme_color"] = theme_settings.color or None
 
 	signup_form_template = frappe.get_hooks("signup_form_template")
 	if signup_form_template and len(signup_form_template):
@@ -107,15 +113,14 @@ def get_context(context):
 
 	if cint(frappe.db.get_value("LDAP Settings", "LDAP Settings", "enabled")):
 		from frappe.integrations.doctype.ldap_settings.ldap_settings import LDAPSettings
-
 		context["ldap_settings"] = LDAPSettings.get_ldap_client_settings()
 
 	login_label = [_("Email")]
 
-	if frappe.utils.cint(frappe.get_system_settings("allow_login_using_mobile_number")):
+	if cint(frappe.get_system_settings("allow_login_using_mobile_number")):
 		login_label.append(_("Mobile"))
 
-	if frappe.utils.cint(frappe.get_system_settings("allow_login_using_user_name")):
+	if cint(frappe.get_system_settings("allow_login_using_user_name")):
 		login_label.append(_("Username"))
 
 	context["login_label"] = f" {_('or')} ".join(login_label)
@@ -158,9 +163,8 @@ def send_login_link(email: str):
 	expiry = frappe.get_system_settings("login_with_email_link_expiry") or 10
 	link = _generate_temporary_login_link(email, expiry)
 
-	app_name = (
-		frappe.get_website_settings("app_name") or frappe.get_system_settings("app_name") or _("Frappe")
-	)
+	# ✅ App Name (Centralized)
+	app_name = get_app_name()
 
 	subject = _("Login To {0}").format(app_name)
 
@@ -174,10 +178,12 @@ def send_login_link(email: str):
 
 
 def _generate_temporary_login_link(email: str, expiry: int):
-	assert isinstance(email, str)
-
 	if not frappe.db.exists("User", email):
-		frappe.throw(_("User with email address {0} does not exist").format(email), frappe.DoesNotExistError)
+		frappe.throw(
+			_("User with email address {0} does not exist").format(email),
+			frappe.DoesNotExistError,
+		)
+
 	key = frappe.generate_hash()
 	frappe.cache.set_value(f"one_time_login_key:{key}", email, expires_in_sec=expiry * 60)
 
@@ -207,25 +213,19 @@ def login_via_key(key: str):
 
 
 def sanitize_redirect(redirect: str | None) -> str | None:
-	"""Only allow redirect on same domain.
-
-	Allowed redirects:
-	- Same host e.g. https://frappe.localhost/path
-	- Just path e.g. /app gets converted to https://frappe.localhost/app
-	"""
+	"""Only allow redirect on same domain."""
 	if not redirect:
 		return redirect
 
 	parsed_redirect = urlparse(redirect)
-
 	parsed_request_host = urlparse(frappe.local.request.url)
+
 	output_parsed_url = parsed_redirect._replace(
-		netloc=parsed_request_host.netloc, scheme=parsed_request_host.scheme
+		netloc=parsed_request_host.netloc,
+		scheme=parsed_request_host.scheme,
 	)
-	if parsed_redirect.netloc:
-		if parsed_request_host.netloc != parsed_redirect.netloc:
-			output_parsed_url = output_parsed_url._replace(path="/app")
-		else:
-			output_parsed_url = output_parsed_url._replace(path=parsed_redirect.path)
+
+	if parsed_redirect.netloc and parsed_request_host.netloc != parsed_redirect.netloc:
+		output_parsed_url = output_parsed_url._replace(path="/app")
 
 	return output_parsed_url.geturl()
