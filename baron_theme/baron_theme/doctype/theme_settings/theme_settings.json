@@ -21,7 +21,7 @@
  "fields": [
   {
    "allow_in_quick_entry": 1,
-   "default": "Roboto",
+   "default": "Cairo",
    "fieldname": "font_family",
    "fieldtype": "Select",
    "label": "Font Family",
@@ -29,7 +29,7 @@
   },
   {
    "allow_in_quick_entry": 1,
-   "default": "#1B7F52",
+   "default": "#1a5fb4",
    "fieldname": "color",
    "fieldtype": "Color",
    "label": "Color"
@@ -96,7 +96,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-12-18 14:45:39.878573",
+ "modified": "2026-01-19 14:17:13.035887",
  "modified_by": "Administrator",
  "module": "Baron Theme",
  "name": "Theme Settings",
