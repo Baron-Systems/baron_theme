@@ -162,7 +162,55 @@ function renderNavbar(response) {
         // Clear previous content and insert the new navbar
         headerContainer.innerHTML = '';
         headerContainer.innerHTML = html;
+        
+        // Add mobile menu toggle functionality
+        setupMobileMenuToggle();
     }
+}
+
+/**
+ * Sets up mobile menu toggle functionality for navbar items with submenus.
+ */
+function setupMobileMenuToggle() {
+    const navbarItems = document.querySelectorAll('.baron-navbar-item:has(.baron-navbar-submenu)');
+    
+    navbarItems.forEach(item => {
+        const link = item.querySelector('.baron-navbar-link');
+        if (link) {
+            // Remove existing click handlers to avoid duplicates
+            const newLink = link.cloneNode(true);
+            link.parentNode.replaceChild(newLink, link);
+            
+            newLink.addEventListener('click', (e) => {
+                // Check if we're on mobile (screen width <= 768px)
+                if (window.innerWidth <= 768) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Close other open menus
+                    navbarItems.forEach(otherItem => {
+                        if (otherItem !== item) {
+                            otherItem.classList.remove('active');
+                        }
+                    });
+                    
+                    // Toggle current menu
+                    item.classList.toggle('active');
+                }
+            });
+        }
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (window.innerWidth <= 768) {
+            if (!e.target.closest('.baron-navbar')) {
+                navbarItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+            }
+        }
+    });
 }
 
 // --- Router Change Listener for Navbar Update ---

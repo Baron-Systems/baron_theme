@@ -38,6 +38,7 @@ app_include_css = [
 app_include_js = [
     "/assets/baron_theme/js/baron_erp.js",
     "/assets/baron_theme/js/top_menu.js",
+    "/assets/baron_theme/js/workspace_enhancements.js",
     # "/assets/baron_theme/js/sidebar_menu/build/sidebar.js"
     
 

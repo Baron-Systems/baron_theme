@@ -57,63 +57,171 @@ $(document).ready(() => {
 	function getCurrentTheme() {
 		return document.documentElement.getAttribute("data-theme") || "light";
 	}
-	function addThemeToggleButton() {
-		const icon_svg = frappe.utils.icon("arrows");
+	
+	function addInstallAppButton() {
+		// Install icon SVG
+		const install_icon_svg =
+			'<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>';
 
-		const currentTheme = getCurrentTheme();
+		const installAppButton = document.createElement("li");
+		installAppButton.id = "installAppButton";
+		installAppButton.innerHTML = install_icon_svg;
+		installAppButton.classList.add("nav-item", "install-app");
+		installAppButton.title = __("تثبيت التطبيق / إنشاء اختصار");
 
-		const moon_icon_svg =
-			'<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
-		const sun_icon_svg =
-			'<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
+		installAppButton.style.color = "#fff";
+		installAppButton.style.border = "none";
+		installAppButton.style.cursor = "pointer";
 
-		const themeToggleButton = document.createElement("li");
-		themeToggleButton.id = "themeToggleButton";
-		themeToggleButton.innerHTML = currentTheme === "light" ? moon_icon_svg : sun_icon_svg;
-		themeToggleButton.classList.add("nav-item", "toggle-theme");
+		let deferredPrompt = null;
+		let isInstalled = window.matchMedia('(display-mode: standalone)').matches;
 
-		themeToggleButton.style.color = "#fff";
-		themeToggleButton.style.border = "none";
-		themeToggleButton.style.cursor = "pointer";
+		// Listen for the beforeinstallprompt event
+		window.addEventListener('beforeinstallprompt', (e) => {
+			// Prevent the mini-infobar from appearing on mobile
+			e.preventDefault();
+			// Stash the event so it can be triggered later
+			deferredPrompt = e;
+		});
+
+		// Listen for app installed event
+		window.addEventListener('appinstalled', () => {
+			deferredPrompt = null;
+			isInstalled = true;
+			frappe.msgprint(__("تم تثبيت التطبيق بنجاح!"));
+		});
 
 		function tryAddingButton() {
 			const fullscreenButton = document.querySelector("#fullscreenToggleButton");
 			if (fullscreenButton) {
-				if (!document.getElementById("themeToggleButton")) {
+				if (!document.getElementById("installAppButton")) {
 					fullscreenButton.parentNode.insertBefore(
-						themeToggleButton,
+						installAppButton,
 						fullscreenButton.nextSibling
 					);
 				}
 
-				themeToggleButton.addEventListener("click", () => {
-					const currentTheme = getCurrentTheme();
-					const theme_to_switch = currentTheme === "light" ? "Dark" : "Light";
+				installAppButton.addEventListener("click", async () => {
+					// Check if app is already installed
+					if (isInstalled || window.matchMedia('(display-mode: standalone)').matches) {
+						frappe.msgprint(__("التطبيق مثبت بالفعل!"));
+						return;
+					}
 
-					frappe.call({
-						method: "frappe.core.doctype.user.user.switch_theme",
-						args: { theme: theme_to_switch },
-						callback: function (response) {
-							document.documentElement.setAttribute(
-								"data-theme",
-								theme_to_switch.toLowerCase()
-							);
-							themeToggleButton.innerHTML =
-								theme_to_switch === "Light" ? moon_icon_svg : sun_icon_svg;
-
-							if (theme_to_switch == "Light") {
-								console.log("Current theme:", currentTheme);
-								document.querySelector(".app-logo").src = frappe.boot.light_logo;
-							} else {
-								document.querySelector(".app-logo").src = frappe.boot.dark_logo;
+					// Check if PWA install prompt is available (most direct method)
+					if (deferredPrompt) {
+						try {
+							// Show the install prompt immediately
+							deferredPrompt.prompt();
+							
+							// Wait for the user to respond to the prompt
+							const { outcome } = await deferredPrompt.userChoice;
+							
+							if (outcome === 'accepted') {
+								// Installation accepted - appinstalled event will fire
+								return;
 							}
-						},
-						error: function (error) {
-							console.error("Error switching theme:", error);
-							frappe.msgprint(__("Failed to switch theme."));
-						},
+							
+							// Clear the deferredPrompt
+							deferredPrompt = null;
+						} catch (err) {
+							console.error("Error showing install prompt:", err);
+						}
+					}
+
+					// For iOS Safari - try to trigger share sheet
+					if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+						if (navigator.share) {
+							try {
+								await navigator.share({
+									title: document.title,
+									text: __("أضف هذا التطبيق إلى الشاشة الرئيسية"),
+									url: window.location.href
+								});
+								// After share, show instructions
+								setTimeout(() => {
+									frappe.msgprint({
+										title: __("تثبيت التطبيق على iOS"),
+										message: __("في شاشة المشاركة، اختر 'إضافة إلى الشاشة الرئيسية' (Add to Home Screen)")
+									});
+								}, 500);
+								return;
+							} catch (err) {
+								if (err.name !== 'AbortError') {
+									frappe.msgprint({
+										title: __("تثبيت التطبيق على iOS"),
+										message: __("اضغط على زر المشاركة (Share) في المتصفح ثم اختر 'إضافة إلى الشاشة الرئيسية' (Add to Home Screen)")
+									});
+								}
+								return;
+							}
+						} else {
+							frappe.msgprint({
+								title: __("تثبيت التطبيق على iOS"),
+								message: __("اضغط على زر المشاركة (Share) في المتصفح ثم اختر 'إضافة إلى الشاشة الرئيسية' (Add to Home Screen)")
+							});
+							return;
+						}
+					}
+
+					// For Android Chrome - show instructions
+					if (/Android/.test(navigator.userAgent)) {
+						// Try Web Share API first
+						if (navigator.share) {
+							try {
+								await navigator.share({
+									title: document.title,
+									text: __("ثبت هذا التطبيق"),
+									url: window.location.href
+								});
+								return;
+							} catch (err) {
+								if (err.name !== 'AbortError') {
+									// Fall through to show instructions
+								}
+							}
+						}
+						
+						frappe.msgprint({
+							title: __("تثبيت التطبيق على Android"),
+							message: __("اضغط على قائمة المتصفح (⋮) في الزاوية العلوية اليمنى، ثم اختر 'تثبيت التطبيق' أو 'إضافة إلى الشاشة الرئيسية'")
+						});
+						return;
+					}
+
+					// For desktop browsers - try to create shortcut
+					if (navigator.share) {
+						try {
+							await navigator.share({
+								title: document.title,
+								url: window.location.href
+							});
+							return;
+						} catch (err) {
+							if (err.name !== 'AbortError') {
+								// Fall through to show instructions
+							}
+						}
+					}
+
+					// Fallback: Show instructions for manual installation
+					const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+					const isEdge = /Edg/.test(navigator.userAgent);
+					const isFirefox = /Firefox/.test(navigator.userAgent);
+					
+					let instructions = "";
+					if (isChrome || isEdge) {
+						instructions = __("انقر على أيقونة التثبيت في شريط العنوان، أو من قائمة المتصفح اختر 'تثبيت التطبيق'");
+					} else if (isFirefox) {
+						instructions = __("من قائمة المتصفح اختر 'إضافة إلى الشاشة الرئيسية'");
+					} else {
+						instructions = __("استخدم قائمة المتصفح لإضافة هذه الصفحة إلى الشاشة الرئيسية أو إنشاء اختصار");
+					}
+
+					frappe.msgprint({
+						title: __("إنشاء اختصار"),
+						message: instructions
 					});
-					// document.querySelector(".app-logo").src = frappe.boot.app_logo_url
 				});
 			} else {
 				// Retry after a short delay if #fullscreenToggleButton is not available yet
@@ -242,7 +350,7 @@ $(document).ready(() => {
 	}
 
 	addFullscreenToggleButton();
-	addThemeToggleButton();
+	// addInstallAppButton(); // Disabled - زر التحميل مخفي
 	addLanguageSwitchButton();
 });
 

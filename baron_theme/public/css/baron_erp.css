@@ -121,24 +121,174 @@ body.full-width .container {
 
 /* --- Workspace / Dashboard --- */
 .widget {
-    border-radius: 0px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: all 0.2s ease;
+}
+
+.widget:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .widget.menu-widget {
-    margin: 20px;
+    margin: 0 0 20px 0;
+    background-color: #ffffff;
+}
+
+.widget-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #f3f4f6;
 }
 
 .widget-title .widget-title-text {
-    text-decoration: underline;
-    font-weight: 800;
+    text-decoration: none !important;
+    font-weight: 600;
+    color: var(--text-primary);
 }
 
 .menu-widget:hover .widget-title .widget-title-text {
     text-decoration: none;
+    color: var(--text-primary);
 }
 
 .menu-open-btn {
     margin-right: var(--margin-sm);
+}
+
+/* Workspace Shortcuts Section */
+.widget-group {
+    margin-bottom: 30px;
+}
+
+.widget-group-head {
+    margin-bottom: 20px;
+}
+
+.widget-group-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+}
+
+.widget-group-body {
+    display: grid;
+    gap: 16px;
+}
+
+.grid-col-3 {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+/* Shortcut Widget Boxes */
+.shortcut-widget-box {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    font-weight: 500;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.shortcut-widget-box:hover {
+    border-color: var(--fluent-primary);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--fluent-primary) 15%, transparent 85%);
+    background-color: color-mix(in srgb, var(--fluent-primary) 5%, var(--fluent-surface) 95%);
+    transform: translateY(-2px);
+}
+
+.shortcut-widget-box a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.shortcut-widget-box:hover a {
+    color: var(--fluent-primary);
+}
+
+/* Workspace Links List */
+.widget-body ul,
+.widget-body .list-unstyled {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.widget-body li {
+    padding: 10px 0;
+    position: relative;
+    padding-left: 24px;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.widget-body li:last-child {
+    border-bottom: none;
+}
+
+.widget-body li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--fluent-primary);
+}
+
+.widget-body li[data-link-type="Report"]::before,
+.widget-body li a[href*="query-report"]::before {
+    background-color: #f59e0b;
+}
+
+.widget-body li a {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    font-size: 14px;
+}
+
+.widget-body li a:hover {
+    color: var(--fluent-primary);
+    font-weight: 500;
+}
+
+/* Workspace Page Layout */
+.layout-main-section {
+    background-color: #f9fafb;
+    padding: 24px;
+    border-radius: 8px;
+}
+
+.page-head {
+    background-color: transparent;
+    padding: 0;
+    margin-bottom: 24px;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
 }
 
 /* --- Modal Animations & Structure --- */
@@ -363,6 +513,17 @@ body.full-width .container {
     height: 36px !important;
     transition: all 0.2s ease;
     padding-left: 50px !important;
+    color: var(--text-color, #323130) !important;
+}
+
+/* Override white text color in search bar for light theme */
+[data-theme='light'] .search-bar input#navbar-search,
+[data-theme='light'] .search-bar input#navbar-search::placeholder {
+    color: var(--text-color, #323130) !important;
+}
+
+[data-theme='light'] .search-bar input#navbar-search::placeholder {
+    opacity: 0.6;
 }
 
 .search-bar .awesomplete>ul {
@@ -387,6 +548,247 @@ body.full-width .container {
 
 .dropdown-menu {
     border-radius: 8px;
+}
+
+/* Fix dropdown menu positioning in navbar - align to right edge of trigger */
+.navbar-nav .nav-item.dropdown {
+    position: relative;
+}
+
+.navbar-nav .nav-item.dropdown .dropdown-menu {
+    right: 0 !important;
+    left: auto !important;
+    margin-top: 0.5rem;
+    min-width: 200px;
+    position: absolute;
+    top: 100%;
+    transform: none;
+}
+
+/* Ensure dropdown menu is properly positioned relative to its parent */
+.navbar-nav .nav-item.dropdown.show .dropdown-menu {
+    display: block;
+    position: absolute;
+    top: 100%;
+    right: 0 !important;
+    left: auto !important;
+    transform: none;
+}
+
+/* Specific fix for user profile dropdown menu */
+.navbar-nav .nav-item.dropdown[data-toggle="dropdown"] .dropdown-menu,
+.navbar-nav .nav-item.dropdown .dropdown-toggle ~ .dropdown-menu {
+    right: 0 !important;
+    left: auto !important;
+}
+
+/* In RTL mode, reverse the positioning */
+html[dir="rtl"] .navbar-nav .nav-item.dropdown[data-toggle="dropdown"] .dropdown-menu,
+html[dir="rtl"] .navbar-nav .nav-item.dropdown .dropdown-toggle ~ .dropdown-menu,
+html[dir="rtl"] .navbar-nav .nav-item.dropdown .dropdown-menu {
+    right: auto !important;
+    left: 0 !important;
+}
+
+/* Fix dropdown menu positioning in RTL mode - align to left edge */
+html[dir="rtl"] .navbar .dropdown-menu,
+html[dir="rtl"] .navbar-nav .nav-item.dropdown .dropdown-menu,
+html[dir="rtl"] .navbar-nav .nav-item.dropdown.show .dropdown-menu,
+html[dir="rtl"] #toolbar-user.dropdown-menu,
+html[dir="rtl"] #toolbar-user.dropdown-menu.show {
+    right: auto !important;
+    left: 0 !important;
+    text-align: right;
+}
+
+/* Fix text alignment and spacing in dropdown items */
+.navbar .dropdown-menu {
+    background-color: #ffffff !important;
+    border: 1px solid var(--border-color, #e1dfdd) !important;
+    color: var(--text-color, #323130) !important;
+}
+
+/* Override any white text color from navbar styles - more specific selectors */
+.navbar .dropdown-menu,
+.navbar .dropdown-menu *:not(.dropdown-divider),
+.navbar-nav .dropdown-menu,
+.navbar-nav .dropdown-menu *:not(.dropdown-divider),
+.navbar .nav-item.dropdown .dropdown-menu,
+.navbar .nav-item.dropdown .dropdown-menu *:not(.dropdown-divider),
+.navbar .dropdown-menu.show,
+.navbar .dropdown-menu.show *:not(.dropdown-divider),
+#toolbar-user,
+#toolbar-user *:not(.dropdown-divider) {
+    color: #323130 !important;
+}
+
+/* Override any inherited white color from navbar parent - force dark text */
+.navbar .dropdown-menu .dropdown-item,
+.navbar .dropdown-menu .dropdown-item::before,
+.navbar .dropdown-menu .dropdown-item::after,
+.navbar .dropdown-menu .dropdown-item a,
+.navbar .dropdown-menu .dropdown-item button,
+.navbar .dropdown-menu .dropdown-item label,
+.navbar .dropdown-menu .dropdown-item span:not(.badge),
+.navbar .dropdown-menu .dropdown-item div,
+#toolbar-user .dropdown-item,
+#toolbar-user .dropdown-item *,
+#toolbar-user a.dropdown-item,
+#toolbar-user button.dropdown-item,
+#toolbar-user .btn-reset.dropdown-item {
+    color: #323130 !important;
+}
+
+/* Override navbar white text inheritance completely */
+.navbar .nav-item.dropdown .dropdown-menu,
+.navbar .nav-item.dropdown .dropdown-menu *,
+#toolbar-user.dropdown-menu,
+#toolbar-user.dropdown-menu * {
+    color: #323130 !important;
+}
+
+/* Specific fix for toolbar-user dropdown menu */
+#toolbar-user.dropdown-menu,
+#toolbar-user.dropdown-menu.show {
+    color: #323130 !important;
+}
+
+#toolbar-user .dropdown-item,
+#toolbar-user a.dropdown-item,
+#toolbar-user button.dropdown-item,
+#toolbar-user .btn-reset.dropdown-item {
+    color: #323130 !important;
+}
+
+#toolbar-user .dropdown-item:hover,
+#toolbar-user .dropdown-item:focus,
+#toolbar-user a.dropdown-item:hover,
+#toolbar-user button.dropdown-item:hover,
+#toolbar-user .btn-reset.dropdown-item:hover {
+    color: #323130 !important;
+    background-color: rgba(0, 120, 212, 0.1) !important;
+}
+
+/* Additional override for any nested elements inside toolbar-user */
+#toolbar-user *,
+#toolbar-user .dropdown-item *,
+#toolbar-user .dropdown-item::before,
+#toolbar-user .dropdown-item::after {
+    color: #323130 !important;
+}
+
+#toolbar-user .dropdown-item:hover *,
+#toolbar-user .dropdown-item:focus * {
+    color: #323130 !important;
+}
+
+.navbar .dropdown-menu .dropdown-item {
+    text-align: left !important;
+    padding: 0.5rem 1rem !important;
+    white-space: normal !important;
+    display: block !important;
+    direction: ltr !important;
+    unicode-bidi: embed;
+    color: var(--text-color, #323130) !important;
+    background-color: transparent !important;
+}
+
+.navbar .dropdown-menu .dropdown-item:hover,
+.navbar .dropdown-menu .dropdown-item:focus {
+    color: var(--text-color, #323130) !important;
+    background-color: var(--highlight-color, rgba(0, 120, 212, 0.1)) !important;
+}
+
+/* Force all text elements inside dropdown to use dark color */
+.navbar .dropdown-menu .dropdown-item,
+.navbar .dropdown-menu .dropdown-item *,
+.navbar .dropdown-menu .dropdown-item a,
+.navbar .dropdown-menu .dropdown-item span,
+.navbar .dropdown-menu .dropdown-item div,
+.navbar .dropdown-menu .dropdown-item p,
+.navbar .dropdown-menu .dropdown-item label {
+    color: var(--text-color, #323130) !important;
+}
+
+/* Fix text alignment in RTL mode */
+html[dir="rtl"] .navbar .dropdown-menu .dropdown-item {
+    text-align: right !important;
+    padding-right: 1rem !important;
+    padding-left: 1rem !important;
+    direction: rtl !important;
+}
+
+/* Ensure text content is properly aligned and colored */
+html[dir="rtl"] .navbar .dropdown-menu .dropdown-item *,
+html[dir="rtl"] .navbar .dropdown-menu .dropdown-item a,
+html[dir="rtl"] .navbar .dropdown-menu .dropdown-item span,
+html[dir="rtl"] .navbar .dropdown-menu .dropdown-item div {
+    text-align: inherit;
+    direction: inherit;
+    color: var(--text-color, #323130) !important;
+}
+
+/* Fix for mixed content (English + Arabic) */
+.navbar .dropdown-menu .dropdown-item {
+    text-align: left;
+    direction: ltr;
+    color: var(--text-color, #323130) !important;
+}
+
+html[dir="rtl"] .navbar .dropdown-menu .dropdown-item {
+    text-align: right;
+    direction: rtl;
+    color: var(--text-color, #323130) !important;
+}
+
+/* Dark theme support for dropdown menu */
+[data-theme='dark'] .navbar .dropdown-menu {
+    background-color: var(--fluent-surface, #252526) !important;
+    border-color: var(--border-color, #3c3c3c) !important;
+}
+
+[data-theme='dark'] .navbar .dropdown-menu .dropdown-item,
+[data-theme='dark'] .navbar .dropdown-menu .dropdown-item *,
+[data-theme='dark'] .navbar .dropdown-menu .dropdown-item a,
+[data-theme='dark'] .navbar .dropdown-menu .dropdown-item span,
+[data-theme='dark'] .navbar .dropdown-menu .dropdown-item div,
+[data-theme='dark'] .navbar .dropdown-menu .dropdown-item p,
+[data-theme='dark'] .navbar .dropdown-menu .dropdown-item label {
+    color: var(--text-primary, #ffffff) !important;
+}
+
+[data-theme='dark'] .navbar .dropdown-menu .dropdown-item:hover,
+[data-theme='dark'] .navbar .dropdown-menu .dropdown-item:focus,
+[data-theme='dark'] .navbar .dropdown-menu .dropdown-item:hover *,
+[data-theme='dark'] .navbar .dropdown-menu .dropdown-item:focus * {
+    color: var(--text-primary, #ffffff) !important;
+    background-color: var(--highlight-color, rgba(58, 150, 221, 0.2)) !important;
+}
+
+/* Ensure proper spacing for text with icons */
+.navbar .dropdown-menu .dropdown-item i,
+.navbar .dropdown-menu .dropdown-item svg {
+    margin-right: 0.5rem;
+    vertical-align: middle;
+}
+
+html[dir="rtl"] .navbar .dropdown-menu .dropdown-item i,
+html[dir="rtl"] .navbar .dropdown-menu .dropdown-item svg {
+    margin-right: 0;
+    margin-left: 0.5rem;
+}
+
+/* Ensure user profile dropdown menu aligns correctly in RTL */
+html[dir="rtl"] .navbar-nav .nav-item.dropdown .dropdown-menu {
+    right: auto !important;
+    left: 0 !important;
+    transform-origin: top left;
+}
+
+/* Fix dropdown menu arrow/positioning for RTL */
+html[dir="rtl"] .dropdown-toggle::after {
+    margin-left: 0;
+    margin-right: 0.255em;
 }
 
 .navbar .vertical-bar {
@@ -544,4 +946,425 @@ li.nav-item.dropdown-help,
 button[aria-controls="toolbar-help"],
 button[aria-label*="Help Dropdown"] {
     display: none !important;
+}
+
+/* ============================================
+   MOBILE RESPONSIVE STYLES
+   ============================================ */
+
+/* --- Tablet and below (max-width: 1024px) --- */
+@media (max-width: 1024px) {
+    .layout-main-section {
+        padding: 16px !important;
+    }
+
+    .widget-group-body {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important;
+    }
+
+    .grid-col-3 {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important;
+    }
+}
+
+/* --- Mobile devices (max-width: 768px) --- */
+@media (max-width: 768px) {
+    /* --- Layout & Spacing --- */
+    .layout-main-section {
+        padding: 12px !important;
+        margin: 8px !important;
+        border-radius: 8px !important;
+    }
+
+    .page-head {
+        padding: 12px !important;
+        margin-bottom: 16px !important;
+    }
+
+    .page-title {
+        font-size: 20px !important;
+        margin-bottom: 8px !important;
+    }
+
+    /* --- Navbar --- */
+    .navbar {
+        padding: 0 4px !important;
+        height: auto !important;
+        min-height: 44px !important;
+        flex-wrap: wrap !important;
+    }
+
+    .navbar .container {
+        padding: 0 4px !important;
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+    }
+
+    #navbar-breadcrumbs {
+        font-size: 12px !important;
+        max-width: 40% !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        flex-shrink: 1 !important;
+    }
+
+    #navbar-breadcrumbs li {
+        display: inline-block !important;
+    }
+
+    #navbar-breadcrumbs li:not(:last-child) {
+        display: none !important;
+    }
+
+    #navbar-breadcrumbs li:last-child {
+        max-width: 100% !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .search-bar {
+        display: none !important; /* إخفاء صندوق البحث في الموبايل */
+    }
+
+    /* بديل: إذا أردت إظهاره صغير جداً
+    .search-bar {
+        flex: 0 0 auto !important;
+        min-width: 0 !important;
+        max-width: 100px !important;
+        margin: 0 2px !important;
+    }
+
+    .search-bar input#navbar-search {
+        font-size: 11px !important;
+        padding-left: 28px !important;
+        padding-right: 4px !important;
+        height: 28px !important;
+        width: 100% !important;
+    }
+
+    .search-bar .search-icon {
+        left: 6px !important;
+        width: 14px !important;
+        height: 14px !important;
+    }
+    */
+
+    .navbar-nav {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .navbar-nav .nav-item {
+        margin: 0 1px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .navbar-nav .nav-item .btn-reset {
+        height: 30px !important;
+        width: 30px !important;
+        padding: 0 !important;
+        min-width: 30px !important;
+    }
+
+    /* إخفاء زر التثبيت */
+    #installAppButton {
+        display: none !important;
+    }
+
+    /* --- Forms & Inputs --- */
+    .form-control,
+    .awesomplete>input,
+    .like-disabled-input {
+        font-size: 16px !important; /* Prevents zoom on iOS */
+        padding: 10px 12px !important;
+    }
+
+    .frappe-control {
+        margin-bottom: 16px !important;
+    }
+
+    .frappe-control .control-label {
+        font-size: 14px !important;
+        margin-bottom: 6px !important;
+    }
+
+    /* --- Buttons --- */
+    .btn {
+        padding: 10px 16px !important;
+        font-size: 14px !important;
+        min-height: 44px !important; /* Better touch target */
+    }
+
+    .btn-sm {
+        padding: 8px 12px !important;
+        font-size: 13px !important;
+        min-height: 36px !important;
+    }
+
+    /* --- Sections & Tabs --- */
+    .section-head {
+        font-size: 16px !important;
+        padding: 8px 0 12px 0 !important;
+        padding-left: 0.5rem !important;
+    }
+
+    .form-tabs .nav-link {
+        padding: 10px 12px !important;
+        font-size: 14px !important;
+    }
+
+    /* --- Workspace / Dashboard --- */
+    .widget {
+        padding: 16px !important;
+        margin-bottom: 16px !important;
+    }
+
+    .widget-title {
+        font-size: 13px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .widget-group-body {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+
+    .grid-col-3 {
+        grid-template-columns: 1fr !important;
+    }
+
+    .shortcut-widget-box {
+        padding: 16px !important;
+        min-height: 70px !important;
+    }
+
+    .widget-body li {
+        padding: 12px 0 !important;
+        padding-left: 24px !important;
+    }
+
+    .widget-body li a {
+        font-size: 14px !important;
+    }
+
+    /* --- Modals --- */
+    .modal-dialog {
+        margin: 10px !important;
+        max-width: calc(100% - 20px) !important;
+    }
+
+    .modal-content {
+        border-radius: 8px !important;
+    }
+
+    .modal-header {
+        padding: 16px !important;
+    }
+
+    .modal-header .modal-title {
+        font-size: 18px !important;
+    }
+
+    .modal-body {
+        padding: 16px !important;
+    }
+
+    .modal-footer {
+        padding: 12px 16px !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
+
+    .modal-footer .btn {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    /* --- Tree View --- */
+    .tree {
+        padding: 8px !important;
+    }
+
+    .tree-link {
+        padding: 8px 10px !important;
+        font-size: 14px !important;
+    }
+
+    .tree-label {
+        font-size: 14px !important;
+    }
+
+    .tree-children {
+        padding-left: 16px !important;
+        margin-left: 12px !important;
+    }
+
+    /* --- Tables --- */
+    .list-row {
+        padding: 12px 8px !important;
+    }
+
+    .list-row-head {
+        padding: 10px 8px !important;
+        font-size: 12px !important;
+    }
+
+    /* --- Page Head Actions --- */
+    .page-head-actions {
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+    }
+
+    .page-head-actions .btn {
+        flex: 1 1 auto !important;
+        min-width: 120px !important;
+    }
+
+    /* --- Timeline --- */
+    .new-timeline .activity-title,
+    .new-timeline .timeline-actions {
+        padding: 12px !important;
+        border-radius: 20px !important;
+    }
+
+    .new-timeline .activity-title h4,
+    .new-timeline .timeline-actions h4 {
+        font-size: 14px !important;
+        padding-left: 10px !important;
+    }
+}
+
+/* --- Small Mobile devices (max-width: 480px) --- */
+@media (max-width: 480px) {
+    /* --- Layout --- */
+    .layout-main-section {
+        padding: 8px !important;
+        margin: 4px !important;
+    }
+
+    .page-head {
+        padding: 8px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .page-title {
+        font-size: 18px !important;
+    }
+
+    /* --- Navbar --- */
+    .navbar {
+        padding: 0 2px !important;
+        min-height: 40px !important;
+    }
+
+    .navbar .container {
+        padding: 0 2px !important;
+    }
+
+    #navbar-breadcrumbs {
+        font-size: 11px !important;
+        max-width: 35% !important;
+    }
+
+    .search-bar {
+        display: none !important; /* إخفاء صندوق البحث في الموبايل الصغير */
+    }
+
+    .navbar-nav .nav-item {
+        margin: 0 !important;
+    }
+
+    .navbar-nav .nav-item .btn-reset {
+        height: 28px !important;
+        width: 28px !important;
+        min-width: 28px !important;
+    }
+
+    /* إخفاء زر التثبيت */
+    #installAppButton {
+        display: none !important;
+    }
+
+    /* --- Forms --- */
+    .form-control,
+    .awesomplete>input {
+        font-size: 16px !important;
+        padding: 12px !important;
+    }
+
+    .frappe-control .control-label {
+        font-size: 13px !important;
+    }
+
+    /* --- Buttons --- */
+    .btn {
+        padding: 12px 14px !important;
+        font-size: 14px !important;
+    }
+
+    /* --- Widgets --- */
+    .widget {
+        padding: 12px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .widget-title {
+        font-size: 12px !important;
+    }
+
+    .shortcut-widget-box {
+        padding: 12px !important;
+        min-height: 60px !important;
+    }
+
+    /* --- Modals --- */
+    .modal-dialog {
+        margin: 5px !important;
+        max-width: calc(100% - 10px) !important;
+    }
+
+    .modal-header {
+        padding: 12px !important;
+    }
+
+    .modal-header .modal-title {
+        font-size: 16px !important;
+    }
+
+    .modal-body {
+        padding: 12px !important;
+    }
+
+    /* --- Sections --- */
+    .section-head {
+        font-size: 14px !important;
+        padding: 6px 0 10px 0 !important;
+    }
+
+    /* --- Timeline --- */
+    .new-timeline .activity-title,
+    .new-timeline .timeline-actions {
+        padding: 10px !important;
+    }
+
+    .new-timeline .activity-title h4,
+    .new-timeline .timeline-actions h4 {
+        font-size: 13px !important;
+        padding-left: 8px !important;
+    }
+}
+
+/* --- Landscape orientation on mobile --- */
+@media (max-width: 768px) and (orientation: landscape) {
+    .navbar {
+        height: 44px !important;
+    }
+
+    .layout-main-section {
+        padding: 12px !important;
+    }
 }

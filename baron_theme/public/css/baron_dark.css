@@ -143,44 +143,118 @@
     }
 
     .desk-sidebar .standard-sidebar-item.selected {
-        background-color: var(--highlight-color);
+        background: linear-gradient(135deg, var(--fluent-primary) 0%, color-mix(in srgb, var(--fluent-primary) 90%, white 10%) 50%, color-mix(in srgb, var(--fluent-primary) 80%, white 20%) 100%) !important;
+        border-radius: 8px;
+        margin: 4px 0;
     }
 
     .desk-sidebar .standard-sidebar-item.selected::before {
-        background-color: var(--fluent-primary);
+        display: none;
     }
 
     .desk-sidebar .standard-sidebar-item.selected .item-anchor .sidebar-item-label,
     .desk-sidebar .standard-sidebar-item.selected .sidebar-item-icon .icon {
-        color: var(--fluent-primary) !important;
+        color: #ffffff !important;
+        font-weight: 600;
     }
 
     .desk-sidebar .standard-sidebar-item.selected .sidebar-item-icon .icon {
-        --icon-stroke: var(--fluent-primary) !important;
+        --icon-stroke: #ffffff !important;
     }
 
     /* --- Workspace --- */
     .widget {
         border: 1px solid var(--border-color);
         box-shadow: var(--fluent-shadow-sm);
-        /* background-color:
-            color-mix(in srgb, var(--primary) 20%, black 50%) !important; */
-        border-radius: 15px;
-        padding: 14px;
+        background-color: var(--fluent-surface) !important;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        transition: all 0.2s ease;
     }
 
+    .widget:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        transform: translateY(-2px);
+    }
+
+    .widget.shortcut-widget-box {
+        background-color: var(--fluent-surface) !important;
+        border: 1px solid var(--border-color);
+        padding: 16px 20px;
+        text-align: center;
+        font-weight: 500;
+        color: var(--text-primary);
+        transition: all 0.2s ease;
+    }
 
     .widget.shortcut-widget-box:hover {
         border-color: var(--fluent-primary);
-        box-shadow: var(--fluent-shadow-md);
+        box-shadow: 0 4px 12px color-mix(in srgb, var(--fluent-primary) 30%, transparent 70%);
+        background-color: color-mix(in srgb, var(--fluent-primary) 10%, var(--fluent-surface) 90%) !important;
     }
 
     .widget.menu-widget {
-        background-color: #2A2A2A;
+        background-color: var(--fluent-surface) !important;
+        border: 1px solid var(--border-color);
+    }
+
+    .widget-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .widget-title .widget-title-text {
+        text-decoration: none !important;
+        font-weight: 600;
     }
 
     .menu-widget:hover .widget-title .widget-title-text {
-        color: var(--gray-100);
+        color: var(--text-primary);
+    }
+
+    /* Workspace Links with colored dots */
+    .widget .widget-body ul,
+    .widget .widget-body .list-unstyled {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .widget .widget-body li {
+        padding: 8px 0;
+        position: relative;
+        padding-left: 20px;
+    }
+
+    .widget .widget-body li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--fluent-primary);
+    }
+
+    .widget .widget-body li[data-link-type="Report"]::before {
+        background-color: #f59e0b;
+    }
+
+    .widget .widget-body a {
+        color: var(--text-primary);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .widget .widget-body a:hover {
+        color: var(--fluent-primary);
     }
 
     /* --- Modals --- */
@@ -253,7 +327,33 @@
 
     /* --- Navbar & Search --- */
     .navbar {
-        border-bottom: 1px solid var(--border-color) !important;
+        background: linear-gradient(135deg, var(--fluent-primary) 0%, color-mix(in srgb, var(--fluent-primary) 90%, white 10%) 50%, color-mix(in srgb, var(--fluent-primary) 80%, white 20%) 100%) !important;
+        border-bottom: none !important;
+        box-shadow: 0 2px 8px color-mix(in srgb, var(--fluent-primary) 30%, transparent 70%);
+    }
+
+    .navbar .navbar-brand,
+    .navbar .navbar-nav .nav-item,
+    .navbar .search-bar,
+    .navbar #navbar-breadcrumbs {
+        color: #ffffff !important;
+    }
+
+    .navbar .navbar-nav .nav-item .btn-reset {
+        color: #ffffff !important;
+    }
+
+    .navbar .navbar-nav .nav-item .btn-reset:hover {
+        background-color: rgba(255, 255, 255, 0.15) !important;
+    }
+
+    .navbar #navbar-breadcrumbs li a {
+        color: rgba(255, 255, 255, 0.9) !important;
+    }
+
+    .navbar #navbar-breadcrumbs li.disabled a {
+        color: #ffffff !important;
+        font-weight: 600;
     }
 
     #navbar-breadcrumbs li a {
@@ -273,14 +373,24 @@
     }
 
     .search-bar input#navbar-search {
-        border: 1px solid var(--fluent-divider) !important;
-        background-color: var(--fluent-background) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        background-color: rgba(255, 255, 255, 0.15) !important;
+        color: #ffffff !important;
+        backdrop-filter: blur(10px);
+    }
+
+    .search-bar input#navbar-search::placeholder {
+        color: rgba(255, 255, 255, 0.7) !important;
     }
 
     .search-bar input#navbar-search:focus {
-        background-color: var(--fluent-surface) !important;
-        border-color: var(--fluent-primary) !important;
-        box-shadow: 0 0 0 3px rgba(58, 150, 221, 0.2) !important;
+        background-color: rgba(255, 255, 255, 0.25) !important;
+        border-color: rgba(255, 255, 255, 0.4) !important;
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .search-bar .search-icon {
+        color: rgba(255, 255, 255, 0.8) !important;
     }
 
     .search-bar .awesomplete>ul {
@@ -303,11 +413,6 @@
 
     .navbar-nav .nav-item .btn-reset:hover {
         background-color: var(--highlight-color);
-    }
-
-    .dropdown-menu {
-        box-shadow: var(--fluent-shadow-lg);
-        border: 1px solid var(--border-color);
     }
 
     .navbar .vertical-bar {

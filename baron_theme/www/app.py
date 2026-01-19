@@ -102,7 +102,7 @@ def get_context(context):
 			"dark_theme": theme,
 			"theme_settings": theme_settings_list,
 			"disable_splash" : bool(int(theme_settings_list.get('disable_splash', 0))),
-			"theme_color": (theme_settings_list['color'] or 'Blue').lower() if 'color' in theme_settings_list else 'blue',
+			"theme_color": theme_settings_list.get('color', '#3498db') if 'color' in theme_settings_list else '#3498db',
 		}
 	)
 

@@ -135,19 +135,62 @@ button {
 /* Responsive: Stack on mobile */
 @media (max-width: 820px) {
 	.login-wrapper {
-		width: 400px;
+		width: 90%;
+		max-width: 400px;
 		flex-direction: column;
 		height: auto;
 		position: relative;
 		top: auto;
 		left: auto;
 		transform: none;
-		margin: 50px auto;
+		margin: 30px auto;
+		padding: 0;
 	}
 	.login-image {
 		display: none; /* Hide image on mobile to save space */
 	}
 	.background {
 		display: none;
+	}
+	form {
+		width: 100%;
+		height: auto;
+		padding: 40px 25px;
+	}
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+	.login-wrapper {
+		width: 95%;
+		margin: 20px auto;
+		border-radius: 8px;
+	}
+	form {
+		padding: 30px 20px;
+	}
+	form h3 {
+		font-size: 14px;
+		margin-top: 0.25rem !important;
+		margin-bottom: 0.5rem;
+	}
+	label {
+		font-size: 14px;
+		margin-top: 12px;
+	}
+	input {
+		height: 44px;
+		font-size: 16px; /* Prevents zoom on iOS */
+		padding: 0 12px;
+		margin-top: 6px;
+	}
+	button {
+		margin-top: 24px !important;
+		padding: 14px 0;
+		font-size: 16px;
+		min-height: 44px; /* Better touch target */
+	}
+	.page-card-head img {
+		max-height: 36px;
 	}
 }
